@@ -9,8 +9,19 @@ import { createStackNavigator, createDrawerNavigator,
     DrawerItems } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import SafeAreaView from 'react-native-safe-area-view';
+import { connect } from 'react-redux';
+import { fetchCampsites, fetchComments, fetchPromotions,
+    fetchPartners } from '../redux/ActionCreators';
 
 
+// actionCreators that have been "thunked"
+// can access action creators as props
+const mapDispatchToProps = {
+    fetchCampsites,
+    fetchComments,
+    fetchPromotions,
+    fetchPartners
+};
 
 
 
@@ -196,6 +207,16 @@ const MainNavigator = createDrawerNavigator(
 
 
 class Main extends Component {
+    
+    //call action creators after the Main component has been created
+    //fetches the data from the server
+    componentDidMount() {
+        this.props.fetchCampsites();
+        this.props.fetchComments();
+        this.props.fetchPromotions();
+        this.props.fetchPartners();
+    }
+    
     render() {
         return (
             <View style={{
@@ -237,4 +258,5 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Main;
+//mapDispatchToProps allows us to access those action creators as props
+export default connect(null, mapDispatchToProps)(Main);
